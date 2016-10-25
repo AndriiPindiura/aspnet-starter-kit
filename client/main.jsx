@@ -26,7 +26,7 @@ import routes from './routes';
 
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
-const childRoutes = routes();
+const childRoutes = routes(store);
 
 render(
   <Provider store={store}>
