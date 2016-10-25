@@ -35,12 +35,12 @@ const config = {
     '!!style!css!react-mdl/extra/material.min.css',
     'react-mdl/extra/material.min.js',
     /* The main entry point of your JavaScript application */
-    './main.js',
+    './main.jsx',
   ],
 
   // Options affecting the output of the compilation
   output: {
-    path: path.resolve(__dirname, './public/dist'),
+    path: path.resolve(__dirname, './wwwroot/dist'),
     publicPath: '/dist/',
     filename: isDebug ? '[name].js?[hash]' : '[name].[hash].js',
     chunkFilename: isDebug ? '[id].js?[chunkhash]' : '[id].[chunkhash].js',
@@ -77,7 +77,7 @@ const config = {
     // Emit a JSON file with assets paths
     // https://github.com/sporto/assets-webpack-plugin#options
     new AssetsPlugin({
-      path: path.resolve(__dirname, './public/dist'),
+      path: path.resolve(__dirname, './wwwroot/dist'),
       filename: 'assets.json',
       prettyPrint: true,
     }),
@@ -87,57 +87,82 @@ const config = {
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)?$/,
         include: [
           path.resolve(__dirname, './client'),
         ],
         loader: `babel-loader?${JSON.stringify(babelConfig)}`,
       },
       {
-        test: /\.css/,
-        loaders: [
-          'style-loader',
-          `css-loader?${JSON.stringify({
-            sourceMap: isDebug,
-            // CSS Modules https://github.com/css-modules/css-modules
-            modules: true,
-            localIdentName: isDebug ? '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]',
-            // CSS Nano http://cssnano.co/options/
-            minimize: !isDebug,
-          })}`,
-          'postcss-loader',
-        ],
+      	test: /\.scss$/,
+      	loader: `style!css?module&localIdentName=${isDebug ? '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]&minimize'}!sass!postcss-loader`
       },
       {
-        test: /\.json$/,
-        exclude: [
-          path.resolve(__dirname, './client/routes.json'),
-        ],
-        loader: 'json-loader',
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|eot|ttf)$/,
+        loader: 'url',
+        query: {
+          name: '[hash].[ext]',
+          limit: 10000,
+        }
       },
-      {
-        test: /\.json$/,
-        include: [
-          path.resolve(__dirname, './client/routes.json'),
-        ],
-        loaders: [
-          `babel-loader?${JSON.stringify(babelConfig)}`,
-          path.resolve(__dirname, './client/utils/routes-loader.js'),
-        ],
-      },
+
+      // {
+      //   test: /\.jsx?$/,
+      //   include: [
+      //     path.resolve(__dirname, './client'),
+      //   ],
+      //   loader: `babel-loader?${JSON.stringify(babelConfig)}`,
+      // },
+      // {
+      //   test: /\.css/,
+      //   loaders: [
+      //     'style-loader',
+      //     `css-loader?${JSON.stringify({
+      //       sourceMap: isDebug,
+      //       // CSS Modules https://github.com/css-modules/css-modules
+      //       modules: true,
+      //       localIdentName: isDebug ? '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]',
+      //       // CSS Nano http://cssnano.co/options/
+      //       minimize: !isDebug,
+      //     })}`,
+      //     'postcss-loader',
+      //   ],
+      // },
+      // {
+      //   test: /\.json$/,
+      //   exclude: [
+      //     path.resolve(__dirname, './client/routes.json'),
+      //   ],
+      //   loader: 'json-loader',
+      // },
+      // {
+      //   test: /\.json$/,
+      //   include: [
+      //     path.resolve(__dirname, './client/routes.json'),
+      //   ],
+      //   loaders: [
+      //     `babel-loader?${JSON.stringify(babelConfig)}`,
+      //     path.resolve(__dirname, './client/utils/routes-loader.js'),
+      //   ],
+      // },
       {
         test: /\.md$/,
         loader: path.resolve(__dirname, './client/utils/markdown-loader.js'),
       },
-      {
-        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)(\?.*)$/,
-        loader: 'url-loader?limit=10000',
-      },
-      {
-        test: /\.(eot|ttf|wav|mp3)(\?.*)$/,
-        loader: 'file-loader',
-      },
+      // {
+      //   test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)(\?.*)$/,
+      //   loader: 'url-loader?limit=10000',
+      // },
+      // {
+      //   test: /\.(eot|ttf|wav|mp3)(\?.*)$/,
+      //   loader: 'file-loader',
+      // },
     ],
+  },
+
+  resolve: {
+    // root: [path.join(__dirname, '..', 'app')],
+    extensions: ['', '.js', '.jsx', '.css'],
   },
 
   // The list of plugins for PostCSS

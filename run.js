@@ -31,10 +31,10 @@ function run(task) {
 // Clean up the output directory
 // -----------------------------------------------------------------------------
 tasks.set('clean', () => Promise.resolve()
-  .then(() => del(['build/*', 'public/dist/*', '!build/.git'], { dot: true }))
+  .then(() => del(['build/*', 'wwwroot/dist/*', '!build/.git'], { dot: true }))
   .then(() => {
-    mkdirp.sync('build/public/dist');
-    mkdirp.sync('public/dist');
+    mkdirp.sync('build/wwwroot/dist');
+    mkdirp.sync('wwwroot/dist');
   })
 );
 
@@ -58,7 +58,7 @@ tasks.set('bundle', () => {
 //
 // Copy static files into the output folder
 // -----------------------------------------------------------------------------
-tasks.set('copy', () => cpy(['public/**/*.*'], 'build', { parents: true }));
+tasks.set('copy', () => cpy(['wwwroot/**/*.*'], 'build', { parents: true }));
 
 //
 // Copy ASP.NET application config file for production and development environments
